@@ -1,9 +1,10 @@
-const { json, text } = require("body-parser");
 const path = require("path");
 const router = require("express").Router();
-const savedNotes = require("../../db/db.json");
+let savedNotes = require("../../db/db.json");
 const fs = require("fs");
+const cuid = require("cuid");
 
+// MAKES NEW NOTE FROM REQ BODY AND WRITES IT TO DB/ RETURNS NEW NOTE
 function createNewNote(body, notesArr) {
   const newNote = body;
   notesArr.push(newNote);
@@ -19,12 +20,25 @@ router.get("/notes", (req, res) => {
   res.json(savedNotes);
 });
 
-// i want to take an incoming new note and add it to the db json obj (and giving it a unique id), then return the new note
+// ROUTE TO SAVE A NOTE AND ASSIGN ID
 router.post("/notes", (req, res) => {
   let newNote = req.body;
-  console.log(savedNotes)
+  newNote.id = cuid();
+
   const savedNote = createNewNote(newNote, savedNotes);
+    console.log(savedNotes)
   res.json(savedNote); 
 });
+
+router.delete("/notes/:id", (req, res) => {
+  console.log(savedNotes);
+    let peram = req.params;
+    let newSavedNotes = savedNotes.filter(note => note.id != peram.id)
+    // someArray = someArray.filter(person => person.name != 'John');
+    // console.log(newSavedNotes);
+    savedNotes = newSavedNotes;
+    return savedNotes;
+  // delete savedNotes;
+})
 
 module.exports = router;
