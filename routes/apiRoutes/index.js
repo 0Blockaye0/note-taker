@@ -40,7 +40,7 @@ router.delete("/notes/:id", (req, res) => {
     // console.log(newSavedNotes);
     savedNotes = newSavedNotes;
     // renderNoteList();
-    return savedNotes;
+    res.json(savedNotes);
   // delete savedNotes;
 });
 
